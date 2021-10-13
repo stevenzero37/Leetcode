@@ -1,20 +1,31 @@
 #include <iostream>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 class Solution {
-private:
-    int temp;
-    std::map<int, int> dict;    //key:value, value:index
 public:
-    Solution () : temp(0) {}
-
     std::vector<int> twoSum(std::vector<int>& nums, int target) {
-        for (int i=0; i<nums.size(); ++i) {
-            temp = target - nums[i];
-            if (dict[temp] == )
-                dict[temp] = 
+        std::unordered_map<int, int> cache;
+        std::vector<int> answer;
+        
+        for (size_t i = 0; i < nums.size(); ++i)
+        {
+            int needed_num = target - nums[i];
+            
+            if (cache.find(needed_num) != cache.end())
+            {
+                // We found it
+                answer.push_back(cache[needed_num]);
+                answer.push_back(i);
+                return answer;
+            }
+            else
+            {
+                // Didn't find it
+                cache.insert(std::make_pair(nums[i], i));
+            }
         }
+        return answer;
     }
 };
 
