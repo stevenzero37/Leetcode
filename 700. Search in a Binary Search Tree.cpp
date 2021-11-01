@@ -2,7 +2,6 @@
 #include <vector>
 #include <queue>
 #include <memory>
-#include <stack>
 
 //Definition for a binary tree node.
 struct TreeNode {
@@ -15,39 +14,36 @@ struct TreeNode {
 };
 
 class Solution {
-private:
-    std::vector<int> res;
 public:
-    std::vector<int> inorderTraversalRecursion(TreeNode* root) {
-        if (root != nullptr) {
-            inorderTraversalRecursion(root->left);
-            res.push_back(root->val);
-            inorderTraversalRecursion(root->right);
-        }
+    TreeNode* searchBSTRecursion (TreeNode* root, int val) {
+        if (root == nullptr)
+            return root;
         
-        return res;
+        if (root->val == val)
+            return root;
+        else if (root->val > val)
+            root = searchBSTRecursion (root->left, val);
+        else if (root->val < val)
+            root = searchBSTRecursion (root->right, val);
+
+        return root;
     }
-    
-    std::vector<int> inorderTraversalIterator(TreeNode* root) {
-        std::stack<TreeNode*> nodeStack;
-        TreeNode* currentNode;
-        
-        currentNode = root;
-        
-        while (!nodeStack.empty() || currentNode != nullptr) {
-            
-            while(currentNode != nullptr) {
-                nodeStack.push(currentNode);
-                currentNode = currentNode->left;
+
+    TreeNode* searchBST(TreeNode* root, int val) {
+        TreeNode* current = root;
+
+        while (current != nullptr) {
+            if (current->val == val)
+                return current;
+            else if (current->val > val) {
+                current = current->left; 
             }
-            
-            currentNode = nodeStack.top();
-            nodeStack.pop();
-            res.push_back(currentNode->val);
-            currentNode = currentNode->right;
+            else if (current->val < val) {
+                current = current->right;
+            }
         }
 
-        return res;
+        return current;
     }
 };
 
@@ -96,19 +92,17 @@ public:
 };
 
 int main() {
-    std::vector<int> data1 {1,-1,2,3};
+    std::vector<int> data1 {4,2,7,1,3};
     std::unique_ptr<Tree> Tree1 = std::make_unique<Tree> (data1[0]);
     std::unique_ptr<Solution> example = std::make_unique<Solution> ();
-    std::vector<int> result;
-    std::vector<int>::iterator it;
+    TreeNode* result;
     
     TreeNode* temp1;
 
     temp1 = Tree1->buildTree (data1);
 
-    //result = example->inorderTraversalRecursion(temp1);
-    result = example->inorderTraversalIterator(temp1);
+    result = example->searchBSTRecursion (temp1, 3);
     
-    for (it=result.begin();it!=result.end();++it)
-        std::cout<< *it << " ";
+    if (result != nullptr)
+        std::cout << result->val;
 }
