@@ -3,29 +3,19 @@
 #include <unordered_map>
 
 class Solution {
+private:
+    std::unordered_map<int, int> temp;    //key:value, value:index
 public:
     std::vector<int> twoSum(std::vector<int>& nums, int target) {
-        std::unordered_map<int, int> cache;
-        std::vector<int> answer;
-        
-        for (size_t i = 0; i < nums.size(); ++i)
-        {
-            int needed_num = target - nums[i];
-            
-            if (cache.find(needed_num) != cache.end())
-            {
-                // We found it
-                answer.push_back(cache[needed_num]);
-                answer.push_back(i);
-                return answer;
-            }
-            else
-            {
-                // Didn't find it
-                cache.insert(std::make_pair(nums[i], i));
+        std::unordered_map <int, int> temp;  
+        for (int i=0;i<nums.size();i++) {
+            if (temp.count(target - nums[i]) == 0)
+                temp[nums[i]] = i;
+            else {
+                return {temp[target - nums[i]], i};
             }
         }
-        return answer;
+        return {};   
     }
 };
 
