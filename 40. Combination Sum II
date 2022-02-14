@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <algorithm>
+
+using namespace std;
+
+/*
+target: 8
+problem : 10,1,2,7,6,1,5
+sorted :  1,1,2,5,6,7,10
+
+        1                                                   1   2           5        6    7   10
+      /                                                     x  /            /        /    /   x
+   1                        2        5        6     7 10|     5     6 7 10| 6 7 10| 7 10| 10
+  /                         /        /       /      o  x     /      o x x   x x x   x  x  x
+ 2         5       6 7 10| 5 6 7 10| 6 7 10| 7 10|          6 7 10|
+ /         /       o x x   o x x x   x x x   x x            x x x
+5 6 7 10| 6 7 10|
+x x x x   x x x
+
+*/  
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>> ans;
+        vector<int> current;
+        sort(candidates.begin(), candidates.end());
+        dfs(ans, candidates, 0, target, current);
+        return ans;
+    }
+private:    
+    void dfs(vector<vector<int>> &ans, vector<int>& candidates, int s, int target, vector<int> &current) {
+        if(target == 0) {
+            ans.push_back(current);
+            return;
+        }
+        
+        for(int i=s;i<candidates.size();++i) {
+            int curNum = candidates[i];
+            if(target < curNum) return;
+            if(i > s && curNum == candidates[i-1]) continue;
+            current.push_back(curNum);
+            dfs(ans, candidates, i+1, target - curNum, current);
+            current.pop_back();
+        }
+    }
+};
+
+int main() {
+    vector<int> candidates {10,1,2,7,6,1,5};
+    int target = 8;
+    vector<vector<int>> ans;
+    unique_ptr<Solution> example = make_unique<Solution>();
+    ans = example->combinationSum2(candidates, target);
+    
+    for(auto nums: ans) {
+        for(auto num : nums)
+            cout << num << " ";
+        cout << endl;
+    }
+}
